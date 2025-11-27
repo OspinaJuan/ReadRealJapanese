@@ -5,7 +5,7 @@ function App() {
   const [text, setText] = useState("")
 
   // 2. Placeholder para resultados (más adelante)
-  const [tokens, setTokens] = useState([])
+  const [tokens, setTokens] = useState(null)
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
@@ -29,8 +29,20 @@ function App() {
         <button
           className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition"
           onClick={() => {
-            // lógica vendrá después
-            console.log("Texto enviado:", text)
+            async function analyzeText() {
+              const res = await fetch("http://localhost:5000/api/analyze", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ text })
+              });
+
+              const data = await res.json();
+              setTokens(data.analyzedText);
+            }
+            
+            analyzeText();
           }}
         >
           Analyze
@@ -38,8 +50,17 @@ function App() {
 
         {/* Área de resultados */}
         <div className="p-4 bg-white rounded-lg border min-h-[80px]">
-          {/* Aquí se mostrarán los tokens más tarde */}
-          Resultados aparecerán aquí.
+          {tokens ? (
+            tokens.map((token, index) => (
+              <div key={index} className="py-1">
+                <strong>{token.surface}</strong> ({token.reading}) - {token.pos}
+                <br />
+                {token.meaning}
+              </div> 
+            ))
+          ) : (
+            "Resultados aparecerán aquí."
+          )}
         </div>
       </div>
     </div>
