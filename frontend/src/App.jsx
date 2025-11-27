@@ -5,7 +5,7 @@ function App() {
   const [text, setText] = useState("")
 
   // 2. Placeholder para resultados (más adelante)
-  const [tokens, setTokens] = useState(null)
+  const [tokens, setTokens] = useState([])
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
@@ -31,7 +31,7 @@ function App() {
           onClick={() => {
             async function analyzeText() {
               try{
-                const res = await fetch("http://localhost:5001/api/text/hiragana", {
+                const res = await fetch("http://localhost:5001/api/text/analyze", {
                   method: "POST",
                   headers: {
                     "Content-Type": "application/json"
@@ -44,7 +44,7 @@ function App() {
                 }
 
                 const data = await res.json();
-                setTokens(JSON.stringify(data.result));
+                setTokens(data.tokens);
               } catch (err) {
                 console.error("Failed to analyze text:", err);
               }
@@ -58,10 +58,14 @@ function App() {
 
         {/* Área de resultados */}
         <div className="p-4 bg-white rounded-lg border min-h-[80px]">
-          {tokens ? (
-                tokens
+          {tokens.length > 0 ? (
+            tokens.map((t, i) => (
+              <div key={i} className="py-1">
+                {t.surface} ({t.reading}): {t.meaning}, {t.pos}
+              </div>
+            ))
           ) : (
-            "Resultados aparecerán aquí."
+            "Results will appear here."
           )}
         </div>
       </div>
