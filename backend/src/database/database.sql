@@ -4,3 +4,9 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT NOW()
 );
+
+CREATE TABLE jmdict (
+    id SERIAL PRIMARY KEY,
+    kanji VARCHAR(255),
+    meaning TEXT[]
+);

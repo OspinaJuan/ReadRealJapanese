@@ -61,7 +61,7 @@ function App() {
           {tokens.length > 0 ? (
             tokens.map((t, i) => (
               <div key={i} className="py-1">
-                {t.surface} ({t.reading}): {t.meaning}, {t.pos}
+                {t.surface} ({t.reading}): {JSON.stringify(t.meaning)}, {t.pos}
               </div>
             ))
           ) : (
