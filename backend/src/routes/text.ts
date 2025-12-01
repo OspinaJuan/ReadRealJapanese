@@ -24,7 +24,7 @@ router.post('/analyze', async (req, res) => {
                 [t.surface_form]
             );
             
-            t.meaning = meaning.rows[0];
+            t.meaning = meaning.rows[0].meaning;
         }
 
         const result = tokens.map(t => ({

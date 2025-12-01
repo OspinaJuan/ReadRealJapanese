@@ -58,15 +58,26 @@ function App() {
 
         {/* Área de resultados */}
         <div className="p-4 bg-white rounded-lg border min-h-[80px]">
+          <ul className="list-disc pl-5">
           {tokens.length > 0 ? (
             tokens.map((t, i) => (
-              <div key={i} className="py-1">
-                {t.surface} ({t.reading}): {JSON.stringify(t.meaning)}, {t.pos}
-              </div>
+              <li key={i} className="py-1">
+                {t.surface}, {t.reading}, {t.pos}
+                <div>
+                  <ul className="list-disc pl-10">
+                    {t.meaning.map((m, j) => (
+                        <li key={j}>
+                          {m}
+                        </li>
+                    ))}
+                  </ul>
+                </div>
+              </li>
             ))
           ) : (
             "Results will appear here."
           )}
+          </ul>
         </div>
       </div>
     </div>
