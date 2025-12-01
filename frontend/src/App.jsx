@@ -1,11 +1,35 @@
-import { useState } from "react"
+import { useState } from "react";
+import React from "react";
 
 function App() {
   // 1. Estado para guardar el texto que pega el usuario
-  const [text, setText] = useState("")
+  const [text, setText] = useState("");
 
   // 2. Placeholder para resultados (más adelante)
-  const [tokens, setTokens] = useState([])
+  const [tokens, setTokens] = useState([]);
+
+  // 3. Estado para guardar popup
+  const [popup, setPopup] = useState({
+    visible: false,
+    x: 0,
+    y: 0,
+    content: null
+  });
+
+  const handleClick = (e, content) => {
+    const rect = e.target.getBoundingClientRect();
+
+    setPopup({
+      visible: true,
+      x: rect.left,
+      y: rect.bottom + 5,
+      content: content
+    });
+  };
+
+  const closePopup = () => {
+    setPopup(prev => ({...prev, visible: false}));
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
@@ -58,26 +82,44 @@ function App() {
 
         {/* Área de resultados */}
         <div className="p-4 bg-white rounded-lg border min-h-[80px]">
-          <ul className="list-disc pl-5">
           {tokens.length > 0 ? (
             tokens.map((t, i) => (
-              <li key={i} className="py-1">
-                {t.surface}, {t.reading}, {t.pos}
-                <div>
-                  <ul className="list-disc pl-10">
-                    {t.meaning.map((m, j) => (
-                        <li key={j}>
-                          {m}
-                        </li>
-                    ))}
-                  </ul>
+              <React.Fragment key={i}>
+              <span 
+                onClick={(e) => 
+                  handleClick(
+                    e,
+                    <div>
+                      {t.reading}, {t.pos}
+                        <ul className="list-disc">
+                          {t.meaning.map((m, j) => (
+                              <li key={j}>
+                                {m}
+                              </li>
+                          ))}
+                        </ul>
+                    </div>
+                  )
+                }
+              >
+                {t.surface}
+              </span>
+
+              {/* Popup */}
+              {popup.visible && (
+                <div
+                  className="absolute bg-white border shadow-lg p-3 rounded"
+                  style={{ left: popup.x, top: popup.y }}
+                  onClick={closePopup}
+                >
+                  {popup.content}
                 </div>
-              </li>
-            ))
+              )}
+              </React.Fragment>
+            )) 
           ) : (
             "Results will appear here."
           )}
-          </ul>
         </div>
       </div>
     </div>
