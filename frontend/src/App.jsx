@@ -84,8 +84,8 @@ function App() {
         <div className="p-4 bg-white rounded-lg border min-h-[80px]">
           {tokens.length > 0 ? (
             tokens.map((t, i) => (
-              <React.Fragment key={i}>
               <span 
+                key={i}
                 onClick={(e) => 
                   handleClick(
                     e,
@@ -104,22 +104,20 @@ function App() {
               >
                 {t.surface}
               </span>
-
-              {/* Popup */}
-              {popup.visible && (
-                <div
-                  className="absolute bg-white border shadow-lg p-3 rounded"
-                  style={{ left: popup.x, top: popup.y }}
-                  onClick={closePopup}
-                >
-                  {popup.content}
-                </div>
-              )}
-              </React.Fragment>
             )) 
           ) : (
             "Results will appear here."
           )}
+          {/* Popup */}
+            {popup.visible && (
+              <div
+                className="absolute bg-white border shadow-lg p-3 rounded"
+                style={{ left: popup.x, top: popup.y }}
+                onClick={closePopup}
+              >
+                {popup.content}
+              </div>
+            )}
         </div>
       </div>
     </div>

@@ -8,5 +8,6 @@ CREATE TABLE users (
 CREATE TABLE jmdict (
     id SERIAL PRIMARY KEY,
     kanji VARCHAR(255),
-    meaning TEXT[]
+    meaning TEXT[],
+    pitches INT[]
 );
