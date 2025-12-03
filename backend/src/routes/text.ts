@@ -1,8 +1,8 @@
 import "dotenv/config";
-import { Router } from 'express';
-import { getTokenizer } from '../services/tokenizer';
-import { toHiragana } from 'wanakana';
-import { POS_MAP } from '../utils/posMap';
+import { Router } from "express";
+import { getTokenizer } from "../services/tokenizer";
+import { toHiragana } from "wanakana";
+import { POS_MAP } from "../utils/posMap";
 import { Pool } from "pg";
 
 const pool = new Pool({
@@ -11,7 +11,7 @@ const pool = new Pool({
 
 const router = Router();
 
-router.post('/analyze', async (req, res) => {
+router.post("/analyze", async (req, res) => {
     try {
         const { text } = req.body;
 
@@ -19,19 +19,25 @@ router.post('/analyze', async (req, res) => {
         const tokens = tokenizer.tokenize(text);
 
         for (const t of tokens) {
-            const meaning = await pool.query(
-                "SELECT meaning FROM jmdict WHERE kanji = $1",
+            const result = await pool.query(
+                "SELECT meaning, pitches FROM jmdict WHERE kanji = $1",
                 [t.surface_form]
             );
-            
-            t.meaning = meaning.rows[0].meaning;
+            if (result.rows.length > 0) {
+                t.meaning = result.rows[0].meaning;
+                t.pitches = result.rows[0].pitches;
+            } else {
+                t.meaning = null;
+                t.pitches = null;
+            }
         }
 
         const result = tokens.map(t => ({
             surface: t.surface_form,
-            reading: t.reading ? toHiragana(t.reading) : '',
+            reading: t.reading ? toHiragana(t.reading) : "",
             pos: POS_MAP[t.pos] || t.pos,
-            meaning: t.meaning
+            meaning: t.meaning,
+            pithces: t.pitches
         }));
 
         return res.json({ tokens: result });
