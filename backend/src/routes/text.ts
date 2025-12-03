@@ -26,7 +26,7 @@ router.post("/analyze", async (req, res) => {
             );
             if (result.rows.length > 0) {
                 t.meaning = result.rows[0].meaning;
-                t.pitches = [result.rows[0].pitches, pitchPattern(t.reading, result.rows[0].pitches[0])];
+                t.pitches = result.rows[0].pitches;
             } else {
                 t.meaning = null;
                 t.pitches = null;

@@ -1,5 +1,7 @@
 import { useState } from "react";
-import React from "react";
+import PitchLine from "./components/PitchLine.jsx";
+import { pitchPattern } from "./utils/pitchPattern";
+
 
 function App() {
   // 1. Estado para guardar el texto que pega el usuario
@@ -89,12 +91,20 @@ function App() {
                 onClick={(e) => 
                   handleClick(
                     e,
-                    <div>
-                      {t.reading}, {t.pos}, {t.pitches}
-                        <ul className="list-disc">
-                          {t.meaning}
-                        </ul>
-                    </div>
+  <div>
+    {t.pitches && (
+      <PitchLine
+        reading={t.reading}
+        accent={t.pitches}
+        pattern={pitchPattern(t.reading, t.pitches)}
+      />
+    )}
+
+    <div>{t.pos}</div>
+
+    {t.meaning}
+    
+  </div>
                   )
                 }
               >
