@@ -3,6 +3,7 @@ import { Router } from "express";
 import { getTokenizer } from "../services/tokenizer";
 import { toHiragana } from "wanakana";
 import { POS_MAP } from "../utils/posMap";
+import { pitchPattern } from "../utils/pitchPattern";
 import { Pool } from "pg";
 
 const pool = new Pool({
@@ -25,7 +26,7 @@ router.post("/analyze", async (req, res) => {
             );
             if (result.rows.length > 0) {
                 t.meaning = result.rows[0].meaning;
-                t.pitches = result.rows[0].pitches;
+                t.pitches = [result.rows[0].pitches, pitchPattern(t.reading, result.rows[0].pitches[0])];
             } else {
                 t.meaning = null;
                 t.pitches = null;
@@ -37,7 +38,7 @@ router.post("/analyze", async (req, res) => {
             reading: t.reading ? toHiragana(t.reading) : "",
             pos: POS_MAP[t.pos] || t.pos,
             meaning: t.meaning,
-            pithces: t.pitches
+            pitches: t.pitches
         }));
 
         return res.json({ tokens: result });

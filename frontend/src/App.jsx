@@ -90,13 +90,9 @@ function App() {
                   handleClick(
                     e,
                     <div>
-                      {t.reading}, {t.pos}
+                      {t.reading}, {t.pos}, {t.pitches}
                         <ul className="list-disc">
-                          {t.meaning.map((m, j) => (
-                              <li key={j}>
-                                {m}
-                              </li>
-                          ))}
+                          {t.meaning}
                         </ul>
                     </div>
                   )
